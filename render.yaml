@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: horizonscan-backend
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npx playwright install --with-deps chromium
+    startCommand: npm run start:backend
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: NODE_ENV
+        value: production
+      - key: PLAYWRIGHT_HEADLESS
+        value: "true"
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: AI_WEBSITE_URL
+        value: "https://chatgpt.com"
+      - key: AI_MAX_CONCURRENT_REQUESTS
+        value: "1"
+      - key: AI_RESPONSE_TIMEOUT_MS
+        value: "120000"
+      - key: AI_NAVIGATION_TIMEOUT_MS
+        value: "45000"

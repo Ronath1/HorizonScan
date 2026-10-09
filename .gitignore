@@ -1,0 +1,31 @@
+# Node dependencies
+node_modules/
+.npm/
+
+# Next.js build artifacts
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Authenticated Playwright Session State & Browser Caches (Security Sensitive!)
+.auth/
+*.session.json
+ai-session.json
+playwright-report/
+test-results/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.vscode/
+.idea/
