@@ -460,7 +460,9 @@ export function getMockPreset(industry: string, targetCountry: string): ScanResp
   if (MOCK_PRESETS[normKey]) {
     return {
       ...MOCK_PRESETS[normKey],
-      timestamp: new Date().toISOString(),
+      timestamp: '2024-12-31T00:00:00.000Z',
+      data_mode: 'demo',
+      warnings: ['Historical demo example. Source excerpts and claims have not been revalidated for current use.'],
     };
   }
 
@@ -474,7 +476,9 @@ export function getMockPreset(industry: string, targetCountry: string): ScanResp
         ...preset,
         industry,
         target_country: targetCountry,
-        timestamp: new Date().toISOString(),
+        timestamp: '2024-12-31T00:00:00.000Z',
+        data_mode: 'demo',
+        warnings: ['Historical demo example. Source excerpts and claims have not been revalidated for current use.'],
       };
     }
   }

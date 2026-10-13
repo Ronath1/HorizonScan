@@ -1,0 +1,10 @@
+.env
+.env.local
+.env.*.local
+.auth/
+.agents/
+skills-lock.json
+node_modules/
+.next/
+test-results/
+playwright-report/

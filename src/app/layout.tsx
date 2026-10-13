@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'HorizonScan | AI-Powered PESTLE Market Intelligence & Risk Analysis',
+  title: "HorizonScan | Evidence-led market research",
   description:
-    'Real-time macro environmental risk assessment across Political, Economic, Social, Technological, Legal, and Environmental dimensions powered by Tavily Search and Gemini Flash.',
+    "Explore the risks and opportunities shaping your market through PESTLE research, source excerpts, and transparent scoring.",
   icons: {
-    icon: '/favicon.ico',
+    icon: "/icon.svg",
   },
 };
 
@@ -16,10 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
-        {children}
-      </body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }

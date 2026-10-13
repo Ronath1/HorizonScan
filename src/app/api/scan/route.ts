@@ -1,15 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { processScanRequest } from '@/lib/scanService';
-import { ScanRequestPayload } from '@/types/pestle';
-
+import { NextRequest } from 'next/server';
+import { guestIdentity, attachGuest, requireSameOrigin, readBody, networkIdentity, json, errorResponse } from '@/lib/backend/security';
+import { getStore } from '@/lib/backend/store';
+import { runScan } from '@/lib/backend/pipeline';
+export const runtime = 'nodejs';
+export const maxDuration = 90;
 export async function POST(req: NextRequest) {
+  let guest: ReturnType<typeof guestIdentity> | undefined;
   try {
-    const body: ScanRequestPayload = await req.json().catch(() => ({}));
-    const result = await processScanRequest(body);
-    return NextResponse.json(result.data, { status: result.status });
-  } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : String(err);
-    console.error('API Route Error:', errorMsg);
-    return NextResponse.json({ error: errorMsg }, { status: 500 });
+    requireSameOrigin(req);guest = guestIdentity(req);
+    const data = await runScan(await readBody(req),{ guest:guest.id,ip:networkIdentity(req) },getStore());
+    return attachGuest(json(data),guest);
+  } catch (error) {
+    const response = errorResponse(error);
+    return guest ? attachGuest(response,guest) : response;
   }
 }

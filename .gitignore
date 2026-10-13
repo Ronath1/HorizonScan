@@ -29,3 +29,10 @@ Thumbs.db
 npm-debug.log*
 .vscode/
 .idea/
+
+.vercel
+.env*
+!.env.example
+.agents/
+skills-lock.json
+tsconfig.tsbuildinfo

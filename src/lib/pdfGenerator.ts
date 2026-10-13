@@ -102,7 +102,7 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
 
   doc.setFontSize(9);
   doc.setTextColor(148, 163, 184);
-  doc.text('EXECUTIVE PESTLE MARKET INTELLIGENCE REPORT', margin + 60, y + 48);
+  doc.text(data.data_mode === 'demo' ? 'HISTORICAL DEMO EXAMPLE - NOT LIVE RESEARCH' : data.stale ? 'OLDER CACHED RESEARCH - FRESH SCAN FAILED' : 'EVIDENCE-LED PESTLE RESEARCH REPORT', margin + 60, y + 48);
 
   // Target Industry & Country badge on right
   doc.setFontSize(9);
@@ -133,7 +133,7 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
   // ==========================================
   // 2. Executive Summary Callout
   // ==========================================
-  const rawSummary = cleanPdfText(data.summary || 'Summary unavailable');
+  const rawSummary = cleanPdfText([data.summary || 'Summary unavailable',data.scoring?.method,data.scoring?.rubric].filter(Boolean).join(' '));
   const summaryLines = doc.splitTextToSize(rawSummary, contentWidth - 28);
   const summaryBoxHeight = summaryLines.length * 13 + 30;
 
@@ -183,7 +183,7 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
   const totalSignals = totalRisks + totalOpportunities;
   const oppPct = totalSignals > 0 ? Math.round((totalOpportunities / totalSignals) * 100) : 50;
   const riskPct = 100 - oppPct;
-  const score = Math.max(-5, Math.min(5, Number(data.overall_sentiment_score || 0)));
+  const score = data.overall_sentiment_score === null ? null : Math.max(-5, Math.min(5, data.overall_sentiment_score));
 
   // Dual Chart Cards: Readiness Meter & Risk/Opportunity Bar
   const halfCardW = (contentWidth - 12) / 2;
@@ -199,10 +199,10 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
   doc.text('MACRO FAVORABILITY METER', margin + 12, y + 16);
 
   doc.setFontSize(22);
-  if (score >= 1) doc.setTextColor(16, 185, 129); // green
-  else if (score <= -1) doc.setTextColor(239, 68, 68); // red
+  if (score !== null && score >= 1) doc.setTextColor(16, 185, 129); // green
+  else if (score !== null && score <= -1) doc.setTextColor(239, 68, 68); // red
   else doc.setTextColor(245, 158, 11); // amber
-  doc.text(score > 0 ? `+${score}` : `${score}`, margin + 12, y + 42);
+  doc.text(score === null ? 'N/A' : score > 0 ? `+${score}` : `${score}`, margin + 12, y + 42);
 
   doc.setFontSize(10);
   doc.setTextColor(100, 116, 139);
@@ -219,9 +219,11 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
   doc.rect(margin + 12 + meterW * 0.65, meterY, meterW * 0.35, 7, 'F');
 
   // Needle indicator
-  const normX = margin + 12 + ((score + 5) / 10) * meterW;
-  doc.setFillColor(15, 23, 42);
-  doc.circle(normX, meterY + 3.5, 4.5, 'F');
+  if (score !== null) {
+    const normX = margin + 12 + ((score + 5) / 10) * meterW;
+    doc.setFillColor(15, 23, 42);
+    doc.circle(normX, meterY + 3.5, 4.5, 'F');
+  }
 
   doc.setFontSize(7.5);
   doc.setTextColor(100, 116, 139);
@@ -342,7 +344,7 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(100, 116, 139);
-    doc.text(`${signals.length} verified signals`, margin + contentWidth - 10, y + 14, { align: 'right' });
+    doc.text(`${signals.length} signals`, margin + contentWidth - 10, y + 14, { align: 'right' });
 
     y += 26;
 
@@ -350,7 +352,7 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
       checkPageBreak(24);
       doc.setFontSize(8.5);
       doc.setTextColor(148, 163, 184);
-      doc.text('No critical macro signals identified in web indices for this pillar.', margin + 10, y + 10);
+      doc.text('No supported signal available. This pillar remains unscored.', margin + 10, y + 10);
       y += 20;
       continue;
     }
@@ -358,7 +360,8 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
     for (const sig of signals) {
       const isOpp = sig.type === 'Opportunity';
       const cleanTitle = cleanPdfText(sig.title || 'Untitled Signal');
-      const cleanDetail = cleanPdfText(sig.detail || '');
+      const cleanDetail = cleanPdfText([sig.detail, sig.impact_reason && `Impact rationale: ${sig.impact_reason}`,
+        ...(sig.evidence || []).map(e => `Evidence ${e.source_id}: "${e.quote}"`),sig.caveat && `Caveat: ${sig.caveat}`].filter(Boolean).join('  '));
       const detailLines = doc.splitTextToSize(cleanDetail, contentWidth - 28);
       const cardHeight = detailLines.length * 11 + 42;
 
@@ -436,7 +439,7 @@ export async function generatePestlePdf(data: ScanResponseData): Promise<void> {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(15, 23, 42);
-    doc.text(`Verified Web Grounding Sources (${data.sources.length} Indexed Sources)`, margin, y);
+    doc.text(`Search Excerpts (${data.sources.length} Indexed Sources)`, margin, y);
     doc.setLineWidth(0.5);
     doc.line(margin, y + 4, margin + contentWidth, y + 4);
     y += 14;
