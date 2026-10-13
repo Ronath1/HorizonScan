@@ -32,6 +32,8 @@ The default model is `gemini-2.5-flash-lite` ($0.10/M text input tokens, $0.40/M
 
 ## Deployment
 
+The existing Vercel project is connected to `Ronath1/HorizonScan` on GitHub, with `main` as its production branch. Push changes to `main` to trigger an automatic production deployment. Check the matching commit under Vercel's Deployments tab and wait for `Ready` before verifying the result at `https://horizonscan-five.vercel.app`. Connecting this repository was necessary because the earlier deployments were uploaded manually and GitHub pushes did not update the domain.
+
 The Vercel project is `ronath1s-projects/horizonscan` using Next.js and Node 22. Its Functions run in Mumbai (`bom1`), near the Upstash store. Upstash provides `KV_REST_API_URL` and `KV_REST_API_TOKEN` in production, preview, and development. `SESSION_SECRET`, `ADMIN_ACCESS_CODE`, and `TAVILY_API_KEY` were added as Vercel Secret variables. Add the **new** `GEMINI_API_KEY` as a Secret variable in the Vercel project when it is ready. Do not add it with a `NEXT_PUBLIC_` prefix. A first deployment is available at `https://horizonscan-five.vercel.app` with Gemini scanning disabled. After adding the key, verify `/api/guest`, `/admin`, a live scan, the citation excerpts, and quotas before inviting public users. Vercel Hobby is intended for personal, noncommercial projects; review the plan terms before commercial use.
 
 The project currently has no Gemini key in Vercel, so `/api/scan` returns a clear configuration error and makes no search or Gemini request. Demo reports remain visible. A live Gemini research-quality check and any public production launch remain pending the new key.
