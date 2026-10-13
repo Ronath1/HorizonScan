@@ -4,6 +4,7 @@ import { chromium } from "playwright";
 import nextEnv from "@next/env";
 import { getMockPreset } from "../src/lib/mockData.ts";
 import { calculateScores, overallScore } from "../src/lib/backend/scoring.ts";
+import { COUNTRIES } from "../src/lib/countries.ts";
 
 nextEnv.loadEnvConfig(process.cwd());
 const base = process.env.HORIZONSCAN_TEST_URL || "http://localhost:3000";
@@ -49,6 +50,39 @@ async function noOverflow(page, name) {
   );
 }
 
+async function readableTypography(page) {
+  const small = await page.evaluate(() => {
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+    );
+    const small = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      const element = node.parentElement;
+      if (
+        !node.textContent.trim() ||
+        !element ||
+        element.closest('svg, script, style, [aria-hidden="true"]') ||
+        !element.getClientRects().length
+      )
+        continue;
+      const size = parseFloat(getComputedStyle(element).fontSize);
+      if (size < 14)
+        small.push({ text: node.textContent.trim().slice(0, 60), size });
+    }
+    return small;
+  });
+  assert.deepEqual(small, [], "Visible website text must be at least 14px");
+  assert.doesNotMatch(
+    await page
+      .locator("h1")
+      .first()
+      .evaluate((node) => getComputedStyle(node).fontFamily),
+    /Georgia|Times New Roman/,
+  );
+}
+
 try {
   await mkdir("test-results", { recursive: true });
   browser = await chromium.launch({ headless: true });
@@ -81,6 +115,56 @@ try {
     true,
   );
   await noOverflow(page, "Desktop homepage");
+  await readableTypography(page);
+  await page
+    .getByRole("combobox", { name: "Country or region", exact: true })
+    .click();
+  assert.equal(await page.getByRole("option").count(), COUNTRIES.length);
+  assert.equal(COUNTRIES.length, 250);
+  await page.keyboard.press("ArrowUp");
+  await page.keyboard.press("Enter");
+  assert.equal(
+    await page.getByLabel("Country or region", { exact: true }).inputValue(),
+    "Zimbabwe",
+  );
+  for (const name of [
+    "Nepal",
+    "Nigeria",
+    "Argentina",
+    "Iceland",
+    "New Zealand",
+    "Zimbabwe",
+    "Kosovo",
+  ]) {
+    assert.ok(
+      COUNTRIES.some((country) => country.name === name),
+      `Country missing: ${name}`,
+    );
+  }
+  await page
+    .getByRole("combobox", { name: "Country or region", exact: true })
+    .fill("Nepal");
+  assert.equal(await page.getByRole("option").count(), 1);
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  assert.equal(
+    await page.getByLabel("Country or region", { exact: true }).inputValue(),
+    "Nepal",
+  );
+  await page
+    .getByRole("button", { name: "Show countries", exact: true })
+    .click();
+  assert.equal(
+    await page.getByRole("option").count(),
+    250,
+    "Reopening should show every country",
+  );
+  await page
+    .getByRole("combobox", { name: "Country or region", exact: true })
+    .fill("Zimbabwe");
+  await page.getByRole("option", { name: "Zimbabwe", exact: true }).click();
+  await page.getByLabel("Country or region", { exact: true }).fill("");
+  await page.keyboard.press("Escape");
   await page.screenshot({
     path: "test-results/home-desktop.png",
     fullPage: true,
@@ -97,6 +181,7 @@ try {
   const originalSignal = page.locator(".priority-finding").first();
   await originalSignal.click();
   await page.getByRole("dialog").waitFor();
+  await readableTypography(page);
   await page
     .getByText(
       "This historical sample uses illustrative scores. Live reports include an impact rationale.",
@@ -261,6 +346,10 @@ try {
   await mobile.route("**/api/guest", (route) => route.fulfill({ json: guest }));
   await mobile.goto(base, { waitUntil: "networkidle" });
   await noOverflow(mobile, "Mobile homepage");
+  await readableTypography(mobile);
+  await mobile.setViewportSize({ width: 320, height: 720 });
+  await noOverflow(mobile, "Narrow mobile homepage");
+  await mobile.setViewportSize({ width: 390, height: 844 });
   await mobile.screenshot({
     path: "test-results/home-mobile.png",
     fullPage: true,
@@ -272,6 +361,7 @@ try {
     .getByText("Sample report · not live research", { exact: true })
     .waitFor();
   await noOverflow(mobile, "Mobile report");
+  await readableTypography(mobile);
   await mobile.getByRole("tab", { name: "PESTLE findings" }).click();
   await noOverflow(mobile, "Mobile findings");
   await mobile.screenshot({
@@ -312,6 +402,7 @@ try {
     .fill(process.env.ADMIN_ACCESS_CODE || "");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await page.getByRole("heading", { name: "Provider readiness" }).waitFor();
+  await readableTypography(page);
   await page.screenshot({
     path: "test-results/admin-desktop.png",
     fullPage: true,
@@ -377,6 +468,7 @@ try {
   assert.equal(patches, 2);
   await page.setViewportSize({ width: 390, height: 844 });
   await noOverflow(page, "Mobile administration");
+  await readableTypography(page);
   await page.screenshot({
     path: "test-results/admin-mobile.png",
     fullPage: true,

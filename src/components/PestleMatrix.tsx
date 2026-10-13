@@ -134,7 +134,7 @@ export function PestleMatrix({
                     >
                       {signal.type}
                     </span>
-                    <span className="muted" style={{ fontSize: 10 }}>
+                    <span className="muted" style={{ fontSize: 14 }}>
                       {pillar.label}
                     </span>
                     {isDemo ? (

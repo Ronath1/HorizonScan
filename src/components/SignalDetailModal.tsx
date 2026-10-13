@@ -86,7 +86,7 @@ export function SignalDetailModal({
                   {sourceDomain(item.source_url)}
                   <ExternalLink size={12} />
                 </a>
-                <p style={{ fontSize: 10, marginTop: 5 }}>
+                <p style={{ fontSize: 14, marginTop: 5 }}>
                   {date ? `Published ${date}` : "Publication date unavailable"}
                 </p>
               </div>
@@ -112,7 +112,7 @@ export function SignalDetailModal({
             {primarySource?.title || sourceDomain(signal.source_url)}
             <ExternalLink size={13} style={{ flexShrink: 0 }} />
           </a>
-          <p style={{ fontSize: 10, marginTop: 7 }}>
+          <p style={{ fontSize: 14, marginTop: 7 }}>
             {primaryDate
               ? `Published ${primaryDate}`
               : "Publication date unavailable"}

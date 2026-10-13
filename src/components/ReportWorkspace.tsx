@@ -139,7 +139,7 @@ export function ReportWorkspace({
       <p
         id="refresh-note"
         className="muted no-print"
-        style={{ fontSize: 10, marginTop: 12 }}
+        style={{ fontSize: 14, marginTop: 12 }}
       >
         Refresh runs fresh research and uses one scan.{" "}
         {refreshDisabled
@@ -217,7 +217,7 @@ export function ReportWorkspace({
                   ) : (
                     <p
                       className="muted"
-                      style={{ fontSize: 12, marginTop: 16 }}
+                      style={{ fontSize: 16, marginTop: 16 }}
                     >
                       No supported {type.toLowerCase()} findings in this report.
                     </p>

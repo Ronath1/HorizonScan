@@ -6,6 +6,8 @@ The app is one Next.js deployment on Vercel. The previous Express/Render/Playwri
 
 ## Research workspace
 
+The interface uses straightforward sans-serif typography: 16px body/input text and at least 14px supporting text across public reports and administration. Country selection is a searchable, keyboard-accessible combobox with 250 alphabetized country/territory entries, including Kosovo. The list is bundled locally, with no runtime country-data API call; attribution is in `THIRD_PARTY_NOTICES.md`.
+
 The frontend uses a light research workspace with navy navigation, teal actions, and a responsive layout. Visitors start with an empty industry/country form; historical sample reports are an explicit choice and consume no scans. A report opens with the market summary, favorability, evidence coverage, and highest-impact opportunities and risks. Its four sections are Overview, PESTLE findings, Sources, and Methodology.
 
 Findings can be searched, filtered by type/category, and sorted by assessed impact. Keyboard-accessible side panels show impact rationales, evidence quotes, source links, available publication dates, and caveats. Missing dates and incomplete research coverage are stated explicitly; the interface does not invent confidence percentages. PDF export loads on demand, and JSON download and printing are available in Methodology. Scans show an honest indeterminate loading state; failures preserve the previous report with an explanation.

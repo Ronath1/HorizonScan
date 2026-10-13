@@ -75,19 +75,3 @@ export const POPULAR_INDUSTRIES = [
   'Aerospace & Defense',
   'Supply Chain & Logistics',
 ];
-
-export const POPULAR_COUNTRIES = [
-  { name: 'Sri Lanka', flag: '🇱🇰', region: 'South Asia' },
-  { name: 'Germany', flag: '🇩🇪', region: 'Europe' },
-  { name: 'India', flag: '🇮🇳', region: 'Asia-Pacific' },
-  { name: 'United States', flag: '🇺🇸', region: 'North America' },
-  { name: 'United Kingdom', flag: '🇬🇧', region: 'Europe' },
-  { name: 'Japan', flag: '🇯🇵', region: 'Asia-Pacific' },
-  { name: 'Singapore', flag: '🇸🇬', region: 'Southeast Asia' },
-  { name: 'France', flag: '🇫🇷', region: 'Europe' },
-  { name: 'Brazil', flag: '🇧🇷', region: 'Latin America' },
-  { name: 'Australia', flag: '🇦🇺', region: 'Oceania' },
-  { name: 'United Arab Emirates', flag: '🇦🇪', region: 'Middle East' },
-  { name: 'Canada', flag: '🇨🇦', region: 'North America' },
-  { name: 'South Korea', flag: '🇰🇷', region: 'East Asia' },
-];

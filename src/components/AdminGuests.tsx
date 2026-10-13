@@ -62,7 +62,7 @@ function GuestRow({
       <div className="guest-row-top">
         <div>
           <code>{guest.id}</code>
-          <p className="muted" style={{ fontSize: 11, marginTop: 5 }}>
+          <p className="muted" style={{ fontSize: 14, marginTop: 5 }}>
             {guest.usage.scans || 0} scans today · Estimated Gemini cost $
             {Number(guest.usage.actual_usd || 0).toFixed(4)}
           </p>

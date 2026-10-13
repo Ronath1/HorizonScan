@@ -38,7 +38,7 @@ export function MarketHero() {
         <h1>
           A clearer view of
           <br />
-          <em>your next market.</em>
+          <span className="hero-accent">your next market.</span>
         </h1>
         <p className="hero-copy">
           Understand the forces shaping an industry. Explore risks, discover
@@ -96,7 +96,7 @@ export function MarketHero() {
               y={y + 4}
               textAnchor="middle"
               fontFamily="Arial"
-              fontSize="11"
+              fontSize="16"
               fill="#597457"
             >
               {["P", "E", "S", "T", "L", "E"][index]}
@@ -112,7 +112,7 @@ export function MarketHero() {
           y="298"
           textAnchor="middle"
           fontFamily="Arial"
-          fontSize="8"
+          fontSize="16"
           letterSpacing="2"
           fill="#728970"
         >
@@ -140,7 +140,7 @@ export function MarketExamples({
           <h2 id="examples-heading">A little perspective, before you begin.</h2>
           <p>Explore a historical sample report. No scan allowance needed.</p>
         </div>
-        <span className="muted" style={{ fontSize: 11 }}>
+        <span className="muted" style={{ fontSize: 14 }}>
           Sample reports
         </span>
       </div>

@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, Building2, Globe2, LoaderCircle } from "lucide-react";
-import { POPULAR_COUNTRIES, POPULAR_INDUSTRIES } from "@/lib/constants";
+import { ArrowRight, Building2, LoaderCircle } from "lucide-react";
+import { POPULAR_INDUSTRIES } from "@/lib/constants";
+import { CountrySelect } from "@/components/CountrySelect";
 import type { GuestState } from "@/components/Header";
 
 interface SearchFormProps {
@@ -90,30 +91,11 @@ export function SearchForm({
               <option key={value} value={value} />
             ))}
           </datalist>
-          <label className="field" htmlFor="country">
-            Country or region
-            <div className="input-wrap">
-              <Globe2 />
-              <input
-                id="country"
-                className="input"
-                list="country-suggestions"
-                value={country}
-                onChange={(event) => setCountry(event.target.value)}
-                maxLength={80}
-                placeholder="e.g. Sri Lanka"
-                required
-                disabled={isLoading}
-              />
-            </div>
-          </label>
-          <datalist id="country-suggestions">
-            {POPULAR_COUNTRIES.map((item) => (
-              <option key={item.name} value={item.name}>
-                {item.region}
-              </option>
-            ))}
-          </datalist>
+          <CountrySelect
+            value={country}
+            onChange={setCountry}
+            disabled={isLoading}
+          />
           <button
             className="button primary scan-submit"
             disabled={
@@ -165,7 +147,7 @@ export function SearchForm({
         <p
           id="scan-allowance-note"
           className="muted"
-          style={{ fontSize: 10, marginTop: 12 }}
+          style={{ fontSize: 14, marginTop: 12 }}
         >
           {guest?.blocked
             ? "Scanning is unavailable for this guest. Sample reports remain available."
