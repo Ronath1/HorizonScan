@@ -9,6 +9,7 @@
     "test": "node --import tsx --test tests/foundation.test.ts",
     "test:browser": "node --import tsx tests/browser-smoke.mjs",
     "test:tavily": "tsx scripts/smoke-tavily.ts",
+    "test:gemini": "tsx scripts/smoke-gemini.ts",
     "test:redis": "tsx scripts/smoke-redis.ts"
   },
   "keywords": [
